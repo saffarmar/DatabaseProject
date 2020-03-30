@@ -19,7 +19,9 @@
 
 	<div class="container text-center">
 		{% if session.logged_in == NULL %}
-			<a href="/register" class="btn btn-primary btn-lg" id = "register_link">Register</a>
+			<a href="/admin_register" class="btn btn-primary btn-lg" id = "aregister_link">Register As Admin</a>
+            <a href="/supplier_register" class="btn btn-primary btn-lg" id = "sregister_link">Register As Supplier</a>
+            <a href="/requester_register" class="btn btn-primary btn-lg" id = "rregister_link">Register As Requester</a>
 			<a href="/login" class="btn btn-success btn-lg" id = "login_link">Login</a>
 		{% endif %}
 	</div>
