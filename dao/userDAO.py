@@ -4,6 +4,7 @@ import psycopg2
 import psycopg2.extras
 
 class UserDao:
+
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'],
                                                 pg_config['user'],
@@ -22,10 +23,10 @@ class UserDao:
 
         return result
 
-    def registerUser(self, name, email, username, password):
+    def registerUser(self, name, email, username, password, role_type):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO users(name, email, username, password) VALUES (%s, %s, %s, %s) RETURNING uid;"
-        cursor.execute(query, (name, email, username, password))
+        query = "INSERT INTO users(name, email, username, password, role_type) VALUES (%s, %s, %s, %s, %s) RETURNING uid;"
+        cursor.execute(query, (name, email, username, password, role_type))
         uid = cursor.fetchone()['uid']
         self.conn.commit()
         cursor.close()
@@ -99,3 +100,10 @@ class UserDao:
 
         return result
 
+    def getUsersByRoleType(self, role_type):
+        cursor = self.conn.cursor()
+        query = "select * from Users where role_type = %s;"
+        cursor.execute(query, (role_type,))
+        result = cursor.fetchone()
+
+        return result
