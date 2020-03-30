@@ -14,7 +14,3 @@ class LoginForm(Form):
 	username = StringField('Username', [validators.DataRequired()])
 	password = PasswordField('Password', [validators.DataRequired()])
 
-class QuoteForm(Form):
-	firstName = StringField("Author's First Name", [validators.Length(min=2, max=20)])
-	lastName = StringField("Author's Last Name", [validators.Length(min=2, max=20)])
-	text = TextAreaField('Quote', [validators.Length(min=6)])
