@@ -92,14 +92,6 @@ class UserDao:
 
         return result
 
-    def getUserCredentials(self, uid):
-        cursor = self.conn.cursor()
-        query = "select * from Credentials where uid = %s;"
-        cursor.execute(query, (uid,))
-        result = cursor.fetchone()
-
-        return result
-
     def getUsersByRoleType(self, role_type):
         cursor = self.conn.cursor()
         query = "select * from Users where role_type = %s;"
