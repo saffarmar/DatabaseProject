@@ -21,20 +21,20 @@ class RequestedDao:
 
         return result
 
-    def addRequested(self, uploader):
+    def addRequested(self, uploader, type, amount, restime):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO requested(uploader) VALUES (%s) RETURNING rid;"
-        cursor.execute(query, ( uploader))
+        query = "INSERT INTO requested(uploader, type, amount, restime) VALUES (%s, %s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (uploader, type, amount, restime))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editRequested(self, uploader, rid):
+    def editRequested(self, uploader, type, amount, restime, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE requested SET uploader=%s WHERE rid =%s RETURNING rid"
-        cursor.execute(query, (uploader, rid))
+        query = "UPDATE requested SET uploader=%s, type=%s, amount=%s, restime=%s WHERE rid =%s RETURNING rid"
+        cursor.execute(query, (uploader, type, amount, restime, rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
@@ -61,10 +61,10 @@ class RequestedDao:
 
         return result
 
-    def getRequestedByResourceType(self, resource_type):
+    def getRequestedByResourceType(self, type):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "SELECT * FROM requested WHERE resource_type = %s;"
-        cursor.execute(query, (resource_type,))
+        query = "SELECT * FROM requested WHERE type = %s;"
+        cursor.execute(query, (type,))
 
         result = cursor.fetchone()
         cursor.close()
