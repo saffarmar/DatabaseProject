@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layout.html' %}
 
-</body>
-</html>
+{% block body %}
+	<br>
+	<h1>Requested Resources <br><small>Welcome, {{session.username}}</small></h1>
+	<hr>
+
+	<h4>Search</h4>
+	<input class="form-control" id="myInput" type="text" placeholder="Resource type or uploader...">
+	<br>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th class="text-center">Uploader</th>
+				<th class="text-center">Resource Type</th>
+
+			</tr>
+		</thead>
+		<tbody id="searchableTable">
+			{% for resource in resources %}
+			<tr>
+				<td id="resource_requester">{{resource.uploader}}</td>
+				<td>{{resource.type}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+    {% if session.role_type == 'requester' or session.role_type == 'admin'%}
+	<div class="container text-center" >
+		<a class="btn btn-success" href="/add_quote" id="add_request"> Add Request </a>
+	</div>
+    {% endif %}
+
+{% endblock %}
