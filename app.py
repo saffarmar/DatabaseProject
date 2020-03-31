@@ -6,6 +6,7 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from forms import RegisterForm, LoginForm
 from dao.userDAO import UserDao
 from dao.requestedDAO import RequestedDao
+from dao.availableDAO import AvailableDao
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -29,9 +30,29 @@ def build_requested_dict(row):
     # row = quote(qid, firstName, lastName, text, uploader)
     request = {}
     request['rid'] = row['rid']
-    request['resource_type'] = row['resource_type']
     request['uploader'] = userDao.getUserById(row['uploader'])['username']
     request['uploader_id'] = row['uploader']
+    request['type'] = row['type']
+    request['amount'] = row['amount']
+    request['restime'] = row['restime']
+
+
+    return request
+
+def build_available_dict(row):
+    userDao = UserDao()
+
+    # row = quote(qid, firstName, lastName, text, uploader)
+    available = {}
+    available['rid'] = row['rid']
+    available['uploader'] = userDao.getUserById(row['uploader'])['username']
+    available['uploader_id'] = row['uploader']
+    available['type'] = row['type']
+    available['amount'] = row['amount']
+    available['reservable'] = row['reservable']
+    available['price'] = row['price']
+    available['restime'] = row['restime']
+
 
     return request
 
@@ -154,14 +175,25 @@ def requester_register():
 @app.route('/available')
 @is_logged_in
 def available():
-    return render_template('home.html')
+    dao = AvailableDao()
+    result = dao.getAllAvailable()
+    available = []
+
+    if result:
+        for row in result:
+            resource = build_available_dict(row)
+            available.append(resource)
+
+        return render_template('available.html', requested=requested)
+
+    msg = "No Resources Found"
+    return render_template('available.html', msg=msg)
 
 
 @app.route('/requested')
 @is_logged_in
 def requested():
     dao = RequestedDao()
-    userDao = UserDao()
     result = dao.getAllRequested()
     requested = []
 
@@ -183,8 +215,19 @@ def profile():
 @app.route('/logout')
 @is_logged_in
 def logout():
+    session.clear()
+    flash("You are now logged out.", "success")
+    return redirect(url_for('login'))
+
+@app.route('/add_request')
+@is_logged_in
+def add_request():
     return render_template('home.html')
 
+@app.route('/add_resource')
+@is_logged_in
+def add_resource():
+    return render_template('home.html')
 
 
 if __name__ == '__main__':
