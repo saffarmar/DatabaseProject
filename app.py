@@ -5,6 +5,7 @@ from passlib.hash import sha256_crypt
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from forms import RegisterForm, LoginForm
 from dao.userDAO import UserDao
+from dao.requestedDAO import RequestedDao
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -20,6 +21,19 @@ def is_logged_in(f):
             return redirect(url_for('login'))
 
     return wrap
+
+
+def build_requested_dict(row):
+    userDao = UserDao()
+
+    # row = quote(qid, firstName, lastName, text, uploader)
+    request = {}
+    request['rid'] = row['rid']
+    request['resource_type'] = row['resource_type']
+    request['uploader'] = userDao.getUserById(row['uploader'])['username']
+    request['uploader_id'] = row['uploader']
+
+    return request
 
 def is_admin(f):
     @wraps(f)
@@ -139,16 +153,27 @@ def requester_register():
 
 @app.route('/available')
 @is_logged_in
-@is_supplier
 def available():
     return render_template('home.html')
 
 
 @app.route('/requested')
 @is_logged_in
-@is_requester
 def requested():
-    return render_template('home.html')
+    dao = RequestedDao()
+    userDao = UserDao()
+    result = dao.getAllRequested()
+    requested = []
+
+    if result:
+        for row in result:
+            request = build_requested_dict(row)
+            requested.append(request)
+
+        return render_template('requested.html', requested=requested)
+
+    msg = "No Resources Found"
+    return render_template('requested.html', msg=msg)
 
 @app.route('/profile')
 @is_logged_in
