@@ -13,14 +13,18 @@
 			<tr>
 				<th class="text-center">Uploader</th>
 				<th class="text-center">Resource Type</th>
+                		<th class="text-center">Amount</th>
+                		<th class="text-center">Requested Time</th>
 
 			</tr>
 		</thead>
 		<tbody id="searchableTable">
-			{% for resource in resources %}
+			{% for request in requested %}
 			<tr>
-				<td id="resource_requester">{{resource.uploader}}</td>
-				<td>{{resource.type}}</td>
+				<td id="resource_requester">{{request.uploader}}</td>
+				<td>{{request.type}}</td>
+                		<td>{{request.amount}}</td>
+                		<td>{{request.restime}}</td>
 			</tr>
 			{% endfor %}
 		</tbody>
@@ -28,7 +32,7 @@
 
     {% if session.role_type == 'requester' or session.role_type == 'admin'%}
 	<div class="container text-center" >
-		<a class="btn btn-success" href="/add_quote" id="add_request"> Add Request </a>
+		<a class="btn btn-success" href="/add_request" id="add_request"> Add Request </a>
 	</div>
     {% endif %}
 

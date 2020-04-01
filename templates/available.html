@@ -1,10 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layout.html' %}
 
-</body>
-</html>
+{% block body %}
+	<br>
+	<h1>Available Resources <br><small>Welcome, {{session.username}}</small></h1>
+	<hr>
+
+	<h4>Search</h4>
+	<input class="form-control" id="myInput" type="text" placeholder="Resource type or uploader...">
+	<br>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th class="text-center">Uploader</th>
+				<th class="text-center">Resource Type</th>
+                <th class="text-center">Amount</th>
+                <th class="text-center">Is It Reservable?</th>
+                <th class="text-center">Price</th>
+                <th class="text-center">Allowed Reservation</th>
+
+			</tr>
+		</thead>
+		<tbody id="searchableTable">
+			{% for resource in available %}
+			<tr>
+				<td id="resource_requester">{{resource.uploader}}</td>
+				<td>{{resource.type}}</td>
+                <td>{{resource.amount}}</td>
+                <td>{{resource.reservable}}</td>
+                <td>{{resource.price}}</td>
+                <td>{{resource.restime}}</td>
+
+
+
+
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+    {% if session.role_type == 'supplier' or session.role_type == 'admin' %}
+	<div class="container text-center" >
+		<a class="btn btn-success" href="/add_resource" id="add_request"> Add Resource </a>
+	</div>
+    {% endif %}
+
+{% endblock %}
