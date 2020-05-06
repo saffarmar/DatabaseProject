@@ -1,4 +1,3 @@
-import csv
 from config.dbconfig import pg_config
 import psycopg2
 import psycopg2.extras
@@ -69,4 +68,13 @@ class RequestedDao:
         result = cursor.fetchone()
         cursor.close()
 
+        return result
+
+    def getRequesterByPartId(self, rid):
+        cursor = self.conn.cursor()
+        query = "select uid, name, email, username from requested natural inner join requester natural inner join requests where rid = %s;"
+        cursor.execute(query, (rid,))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
