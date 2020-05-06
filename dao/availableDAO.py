@@ -1,4 +1,3 @@
-import csv
 from config.dbconfig import pg_config
 import psycopg2
 import psycopg2.extras
@@ -63,10 +62,19 @@ class AvailableDao:
 
     def getAvailableByResourceType(self, resource_type):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "SELECT * FROM requested WHERE resource_type = %s;"
+        query = "SELECT * FROM requested WHERE type = %s;"
         cursor.execute(query, (resource_type,))
 
         result = cursor.fetchone()
         cursor.close()
 
+        return result
+
+    def getSupplierByPartId(self, rid):
+        cursor = self.conn.cursor()
+        query = "select uid, name, email, username from available natural inner join supplier natural inner join supplies where rid = %s;"
+        cursor.execute(query, (rid,))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
