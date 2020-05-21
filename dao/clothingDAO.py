@@ -21,19 +21,19 @@ class ClothingDao:
 
         return result
 
-    def addClothing(self, gender, kind, brand, material, size):
+    def addClothing(self, gender, brand, material, size):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO clothing(gender, kind, brand, material, size) VALUES (%s, %s, %s, %s, %s) RETURNING rid;"
-        cursor.execute(query, (gender, kind, brand, material, size))
+        query = "INSERT INTO clothing(gender, brand, material, size) VALUES (%s, %s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (gender, brand, material, size))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editClothing(self, gender, kind, brand, material, size, rid):
+    def editClothing(self, gender, brand, material, size, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE clothing SET gender=%s, kind=%s, brand=%s, material=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE clothing SET gender=%s, brand=%s, material=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()

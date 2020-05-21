@@ -21,19 +21,19 @@ class MedicalDeviceDao:
 
         return result
 
-    def addMedicalDevice(self, kind, erequirement, weight):
+    def addMedicalDevice(self, erequirement, weight):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO medicalDevices(kind, erequirement, weight) VALUES (%s, %s, %s ) RETURNING rid;"
-        cursor.execute(query, (kind, erequirement, weight))
+        query = "INSERT INTO medicalDevices(erequirement, weight) VALUES (%s, %s) RETURNING rid;"
+        cursor.execute(query, (erequirement, weight))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editMedicalDevice(self, kind, erequirement, weight, rid):
+    def editMedicalDevice(self, erequirement, weight, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE medicalDevices SET kind=%s, erequirement=%s, weight=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE medicalDevices SET  erequirement=%s, weight=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()

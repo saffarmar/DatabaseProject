@@ -21,19 +21,19 @@ class MedicationDao:
 
         return result
 
-    def addMedication(self, kind, brand, form, prescription, exdate, size):
+    def addMedication(self, brand, form, prescription, exdate, size):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO medications(kind, brand, form, prescription, exdate, size) VALUES (%s, %s, %s, %s, %s, %s ) RETURNING rid;"
-        cursor.execute(query, (kind, brand, form, prescription, exdate, size))
+        query = "INSERT INTO medications(brand, form, prescription, exdate, size) VALUES (%s, %s, %s, %s, %s ) RETURNING rid;"
+        cursor.execute(query, (brand, form, prescription, exdate, size))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editMedication(self, kind, brand, form, prescription, exdate, size, rid):
+    def editMedication(self, brand, form, prescription, exdate, size, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE medications SET kind=%s, brand=%s, form=%s, prescription=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE medications SET brand=%s, form=%s, prescription=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()

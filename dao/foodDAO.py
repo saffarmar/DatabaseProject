@@ -21,19 +21,19 @@ class FoodDao:
 
         return result
 
-    def addFood(self, kind, brand, flavor, exdate, size):
+    def addFood(self, brand, flavor, exdate, size):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO food(kind, brand, flavor, exdate, size) VALUES (%s, %s, %s, %s, %s) RETURNING rid;"
-        cursor.execute(query, (kind, brand, flavor, exdate, size))
+        query = "INSERT INTO food(brand, flavor, exdate, size) VALUES (%s, %s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (brand, flavor, exdate, size))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editFood(self, kind, brand, flavor, exdate, size, rid):
+    def editFood(self, brand, flavor, exdate, size, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE food SET kind=%s, brand=%s, flavor=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE food SET brand=%s, flavor=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()

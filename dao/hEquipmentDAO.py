@@ -21,19 +21,19 @@ class HeavyEquipmentDao:
 
         return result
 
-    def addHeavyEquipment(self, kind, erequirement, etype, weight, age, brand):
+    def addHeavyEquipment(self, erequirement, etype, weight, age, brand):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO heavyEquipment(kind, erequirement, etype, weight, age, brand) VALUES (%s, %s, %s, %s, %s, %s) RETURNING rid;"
-        cursor.execute(query, (kind, erequirement, etype, weight, age, brand))
+        query = "INSERT INTO heavyEquipment(erequirement, etype, weight, age, brand) VALUES ( %s, %s, %s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (erequirement, etype, weight, age, brand))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editHeavyEquipment(self, kind, erequirement, etype, weight, age, brand, rid):
+    def editHeavyEquipment(self, erequirement, etype, weight, age, brand, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE heavyEquipment SET kind=%s, erequirement=%s, etype=%s, weight=%s, age=%s, brand=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE heavyEquipment SET erequirement=%s, etype=%s, weight=%s, age=%s, brand=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()

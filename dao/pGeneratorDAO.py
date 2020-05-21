@@ -21,19 +21,19 @@ class PowerGeneratorDao:
 
         return result
 
-    def addPowerGenerator(self, fuel, eOut, age, weight):
+    def addPowerGenerator(self, eOut, age, weight):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO powerGenerators(fuel, eOut, age, weight) VALUES (%s, %s, %s, %s) RETURNING rid;"
-        cursor.execute(query, (fuel, eOut, age, weight))
+        query = "INSERT INTO powerGenerators(eOut, age, weight) VALUES (%s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (eOut, age, weight))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editPowerGenerator(self, fuel, eOut, age, weight, rid):
+    def editPowerGenerator(self, eOut, age, weight, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE powerGenerators SET fuel=%s, eOut=%s, age=%s, weight=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE powerGenerators SET  eOut=%s, age=%s, weight=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
@@ -51,7 +51,7 @@ class PowerGeneratorDao:
 
         return rid
 
-    def getPowerGenerator(self, rid):
+    def getPowerGeneratorById(self, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = "SELECT * FROM powerGenerators WHERE rid = %s;"
         cursor.execute(query, (rid,))

@@ -21,19 +21,19 @@ class BatteryDao:
 
         return result
 
-    def addBattery(self, kind, brand, exdate, size):
+    def addBattery(self, brand, exdate, size):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO batteries(kind, brand, exdate, size) VALUES (%s, %s, %s, %s) RETURNING rid;"
-        cursor.execute(query, (kind, brand, exdate, size))
+        query = "INSERT INTO batteries(brand, exdate, size) VALUES (%s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (brand, exdate, size))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editBattery(self, kind, brand, exdate, size, rid):
+    def editBattery(self, brand, exdate, size, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE batteries SET kind=%s, brand=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE batteries SET brand=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()

@@ -21,19 +21,19 @@ class ToolDao:
 
         return result
 
-    def addTool(self, kind, erequirement, weight, material):
+    def addTool(self, erequirement, weight, material):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO tools(kind, erequirement, weight, material) VALUES (%s, %s, %s, %s) RETURNING rid;"
-        cursor.execute(query, (kind, erequirement, weight, material))
+        query = "INSERT INTO tools(erequirement, weight, material) VALUES (%s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (erequirement, weight, material))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editTool(self, kind, erequirement, weight, material, rid):
+    def editTool(self, erequirement, weight, material, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE tools SET kind=%s, erequirement=%s, weight=%s, material=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE tools SET erequirement=%s, weight=%s, material=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
@@ -51,7 +51,7 @@ class ToolDao:
 
         return rid
 
-    def getTool(self, rid):
+    def getToolById(self, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = "SELECT * FROM tools WHERE rid = %s;"
         cursor.execute(query, (rid,))

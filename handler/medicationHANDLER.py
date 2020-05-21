@@ -8,19 +8,17 @@ class MedicationHandler:
     def build_resource_dict(self, row):
         result = {}
         result['rid'] = row[0]
-        result['kind'] = row[1]
-        result['brand'] = row[2]
-        result['form'] = row[3]
-        result['prescription'] = row[4]
-        result['exdate'] = row[5]
-        result['size'] = row[6]
+        result['brand'] = row[1]
+        result['form'] = row[2]
+        result['prescription'] = row[3]
+        result['exdate'] = row[4]
+        result['size'] = row[5]
         return result
 
 
-    def build_resource_attributes(self, rid, kind, brand, form, prescription, exdate, size):
+    def build_resource_attributes(self, rid, brand, form, prescription, exdate, size):
         result = {}
         result['rid'] = rid
-        result['kind'] = kind
         result['brand'] = brand
         result['form'] = form
         result['prescription'] = prescription
@@ -55,16 +53,15 @@ class MedicationHandler:
         if len(form) != 4:
             return jsonify(Error="Malformed post request"), 400
         else:
-            kind = form['kind']
             brand = form['brand']
             form = form['form']
             prescription = form['prescription']
             exdate = form['exdate']
             size = form['size']
-            if kind and brand and exdate and form and prescription:
+            if brand and exdate and form and prescription:
                 dao = MedicationDao()
-                rid = dao.addMedication(kind, brand, form, prescription, exdate, size)
-                result = self.build_resource_attributes(rid, kind, brand, form, prescription, exdate, size)
+                rid = dao.addMedication(brand, form, prescription, exdate, size)
+                result = self.build_resource_attributes(rid, brand, form, prescription, exdate, size)
                 return jsonify(Part=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
@@ -87,15 +84,14 @@ class MedicationHandler:
             if len(form) != 4:
                 return jsonify(Error="Malformed update request"), 400
             else:
-                kind = form['kind']
                 brand = form['brand']
                 form = form['form']
                 prescription = form['prescription']
                 exdate = form['exdate']
                 size = form['size']
-                if kind and brand and exdate and form and prescription:
-                    dao.editMedication(rid, kind, brand, form, prescription, exdate, size)
-                    result = self.build_resource_attributes(rid, kind, brand, form, prescription, exdate, size)
+                if brand and exdate and form and prescription:
+                    dao.editMedication(rid, brand, form, prescription, exdate, size)
+                    result = self.build_resource_attributes(rid, brand, form, prescription, exdate, size)
                     return jsonify(Part=result), 200
                 else:
                     return jsonify(Error="Unexpected attributes in update request"), 400

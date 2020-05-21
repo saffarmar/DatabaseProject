@@ -21,19 +21,19 @@ class WaterDao:
 
         return result
 
-    def addWater(self, kind, brand, exdate, size):
+    def addWater(self, brand, exdate, size):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO water(kind, brand, exdate, size) VALUES (%s, %s, %s, %s) RETURNING rid;"
-        cursor.execute(query, (kind, brand, exdate, size))
+        query = "INSERT INTO water(brand, exdate, size) VALUES (%s, %s, %s) RETURNING rid;"
+        cursor.execute(query, (brand, exdate, size))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editWater(self, kind, brand, exdate, size, rid):
+    def editWater(self, brand, exdate, size, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE water SET kind=%s, brand=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE water SET brand=%s, exdate=%s, size=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()

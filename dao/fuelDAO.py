@@ -21,19 +21,19 @@ class FuelDao:
 
         return result
 
-    def addFuel(self, kind, octane):
+    def addFuel(self, octane):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "INSERT INTO fuel(kind, octane) VALUES (%s, %s) RETURNING rid;"
-        cursor.execute(query, (kind, octane))
+        query = "INSERT INTO fuel(octane) VALUES (%s) RETURNING rid;"
+        cursor.execute(query, (octane))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
         cursor.close()
 
         return rid
 
-    def editFuel(self, kind, octane, rid):
+    def editFuel(self, octane, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "UPDATE fuel SET kindl=%s, octane=%s, rid=%s WHERE rid =%s RETURNING rid"
+        query = "UPDATE fuel SET octane=%s, rid=%s WHERE rid =%s RETURNING rid"
         cursor.execute(query, (rid))
         rid = cursor.fetchone()['rid']
         self.conn.commit()
@@ -51,7 +51,7 @@ class FuelDao:
 
         return rid
 
-    def getFuel(self, rid):
+    def getFuelById(self, rid):
         cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = "SELECT * FROM fuel WHERE rid = %s;"
         cursor.execute(query, (rid,))
