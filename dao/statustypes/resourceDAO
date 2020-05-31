@@ -1,0 +1,65 @@
+import csv
+from config.dbconfig import pg_config
+import psycopg2
+import psycopg2.extras
+
+
+class ResourceDao:
+
+    def __init__(self):
+        connection_url = "dbname=%s user=%s password=%s" % (pg_config['dbname'],
+                                                            pg_config['user'],
+                                                            pg_config['passwd'])
+
+        self.conn = psycopg2._connect(connection_url)
+
+    def getAllResource(self):
+        cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = "SELECT * FROM resources"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        cursor.close()
+
+        return result
+
+    def addResource(self, uid, kind):
+        cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = "INSERT INTO resource(uid, kind) VALUES (%s, %s) RETURNING rid;"
+        cursor.execute(query, (uid, kind))
+        rid = cursor.fetchone()['rid']
+        self.conn.commit()
+        cursor.close()
+
+        return rid
+
+
+    def getResourceById(self, rid):
+        cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = "SELECT * FROM resource WHERE rid = %s;"
+        cursor.execute(query, (rid,))
+
+        result = cursor.fetchone()
+        cursor.close()
+
+        return result
+
+    def getResourceType(self, rid):
+        cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = "SELECT kind FROM resource WHERE rid = %s;"
+        cursor.execute(query, (rid,))
+
+        result = cursor.fetchone()['kind']
+        cursor.close()
+
+        return result
+
+    def getResourceByResourceType(self, kind):
+        cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = "SELECT * FROM requested WHERE kind = %s;"
+        cursor.execute(query, (kind,))
+
+        result = cursor.fetchone()
+        cursor.close()
+
+        return result
+
